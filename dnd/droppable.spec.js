@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import Droppable from '../../../../src/helpers/dnd/droppable';
-import DragContext from '../../../../src/helpers/dnd/dragContext';
+import Droppable from './src/helpers/dnd/droppable';
+import DragContext from './src/helpers/dnd/dragContext';
 
 describe('Droppable Tests', () => {
   let mockElement;
