@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /**
  * @private
  * Singleton instance for drag-drop variables

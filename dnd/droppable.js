@@ -1,5 +1,4 @@
-import dragContext from './dragContext'
-
+import dragContext from './dragContext';
 
 /**
  * DropOptions definition which can be used with v-droppable
@@ -14,62 +13,59 @@ import dragContext from './dragContext'
  *  This function will be called with (DragOptions.value, DragOptions, DropEvent) when an allowed drop operation is done to the drop zone.
  */
 
-
 export default class Droppable {
-    constructor(el, dropOptions) {
-        this.el = el;
-        this.dropOptions = dropOptions;
+  constructor(el, dropOptions) {
+    this.el = el;
+    this.dropOptions = dropOptions;
 
-        this.allowListener = this.allowListener.bind(this);
-        this.dropListener = this.dropListener.bind(this);
-        this.dragleaveListener = this.dragleaveListener.bind(this);
+    this.allowListener = this.allowListener.bind(this);
+    this.dropListener = this.dropListener.bind(this);
+    this.dragleaveListener = this.dragleaveListener.bind(this);
 
-        this.bind();
-        console.log('Droppable Constructed')
+    this.bind();
+  }
+
+  allowListener(event) {
+    if (!this.dropOptions.allow) {
+      return;
     }
 
-    allowListener(event) {
-        if (!this.dropOptions.allow) {
-            return;
-        }
-
-        const dropAllowed = this.dropOptions.allow.indexOf(dragContext.type) > -1;
-        if (!dropAllowed) {
-            return;
-        }
-
-        this.addIndicator();
-        event.preventDefault();
+    const dropAllowed = this.dropOptions.allow.indexOf(dragContext.type) > -1;
+    if (!dropAllowed) {
+      return;
     }
 
-    addIndicator() {
-        this.dropOptions.indicatorClass && this.el.classList.add(this.dropOptions.indicatorClass);
-    }
+    this.addIndicator();
+    event.preventDefault();
+  }
 
-    removeIndicator() {
-        this.dropOptions.indicatorClass && this.el.classList.remove(this.dropOptions.indicatorClass);
-    }
+  addIndicator() {
+    this.dropOptions.indicatorClass && this.el.classList.add(this.dropOptions.indicatorClass);
+  }
 
-    dropListener(event) {
-        console.log('Drop Handling')
-        this.removeIndicator();
-        this.dropOptions.onDrop(dragContext.item, dragContext, event);
-    };
+  removeIndicator() {
+    this.dropOptions.indicatorClass && this.el.classList.remove(this.dropOptions.indicatorClass);
+  }
 
-    dragleaveListener() {
-        this.removeIndicator();
-    };
+  dropListener(event) {
+    this.removeIndicator();
+    this.dropOptions.onDrop(dragContext.item, dragContext, event);
+  }
 
-    bind() {
-        this.el.addEventListener('dragover', this.allowListener);
-        this.el.addEventListener('drop', this.dropListener);
-        this.el.addEventListener('dragleave', this.dragleaveListener);
-    }
+  dragleaveListener() {
+    this.removeIndicator();
+  }
 
-    destroy() {
-        this.el.removeEventListener('dragover', this.allowListener);
-        this.el.removeEventListener('drop', this.dropListener);
-        this.el.removeEventListener('dragleave', this.dragleaveListener);
-        this.el = null;
-    }
+  bind() {
+    this.el.addEventListener('dragover', this.allowListener);
+    this.el.addEventListener('drop', this.dropListener);
+    this.el.addEventListener('dragleave', this.dragleaveListener);
+  }
+
+  destroy() {
+    this.el.removeEventListener('dragover', this.allowListener);
+    this.el.removeEventListener('drop', this.dropListener);
+    this.el.removeEventListener('dragleave', this.dragleaveListener);
+    this.el = null;
+  }
 }
