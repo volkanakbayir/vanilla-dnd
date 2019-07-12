@@ -4,6 +4,8 @@ import Droppable from './src/helpers/dnd/droppable';
 import DragContext from './src/helpers/dnd/dragContext';
 
 describe('Droppable Tests', () => {
+  const DND_DROP_CLASS = 'dnd__drop-container';
+
   let mockElement;
   let mockRealElement;
 
@@ -17,6 +19,10 @@ describe('Droppable Tests', () => {
     mockElement = {
       addEventListener: sinon.spy(),
       removeEventListener: sinon.spy(),
+      classList: {
+        add: sinon.spy(),
+        remove: sinon.spy(),
+      },
     };
     mockRealElement = document.createElement('div');
   });
@@ -47,14 +53,14 @@ describe('Droppable Tests', () => {
       indicatorClass: 'test1',
     });
     drp.addIndicator();
-    expect(mockRealElement.className).to.eq('test1');
+    expect(mockRealElement.classList.contains('test1')).to.be.true;
   });
 
   it("should remove indicatorClass the the related element's classList", () => {
     const drp = new Droppable(mockRealElement, {
       indicatorClass: 'test1',
     });
-    mockElement.className = 'test1';
+    mockRealElement.className = 'test1';
     drp.removeIndicator();
     expect(mockRealElement.className).to.eq('');
   });
@@ -65,7 +71,7 @@ describe('Droppable Tests', () => {
     });
     drp.addIndicator();
     mockRealElement.dispatchEvent(createBubbledEvent('dragleave', {}));
-    expect(mockRealElement.className).to.eq('');
+    expect(mockRealElement.className).to.eq(DND_DROP_CLASS);
   });
 
   it('should remove indicatorClass drop happened', () => {
@@ -75,16 +81,18 @@ describe('Droppable Tests', () => {
     });
     drp.addIndicator();
     mockRealElement.dispatchEvent(createBubbledEvent('drop', {}));
-    expect(mockRealElement.className).to.eq('');
+    expect(mockRealElement.className).to.eq(DND_DROP_CLASS);
   });
 
   it('should call onDrop when drop event happened', () => {
+    DragContext.item = { someMockedObjectProp: 1 };
     const onDrop = sinon.spy();
     new Droppable(mockRealElement, {
       onDrop,
     });
     mockRealElement.dispatchEvent(createBubbledEvent('drop', {}));
     expect(onDrop.called).to.be.true;
+    expect(onDrop.getCall(0).args[0]).to.be.eql(DragContext.item);
   });
 
   it('should not allow any drop if no allow types array given', () => {
