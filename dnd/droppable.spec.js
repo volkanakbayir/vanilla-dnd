@@ -60,9 +60,9 @@ describe('Droppable Tests', () => {
     const drp = new Droppable(mockRealElement, {
       indicatorClass: 'test1',
     });
-    mockRealElement.className = 'test1';
+    mockRealElement.classList.add('test1');
     drp.removeIndicator();
-    expect(mockRealElement.className).to.eq('');
+    expect(mockRealElement.classList.contains('test1')).to.be.false;
   });
 
   it('should remove indicatorClass dragLeave happened', () => {
@@ -70,8 +70,13 @@ describe('Droppable Tests', () => {
       indicatorClass: 'test1',
     });
     drp.addIndicator();
+    let shouldRemoveIndicatorStub = sinon.stub(drp, 'shouldRemoveIndicatorWhenDragLeave').returns(false);
     mockRealElement.dispatchEvent(createBubbledEvent('dragleave', {}));
-    expect(mockRealElement.className).to.eq(DND_DROP_CLASS);
+    expect(mockRealElement.classList.contains('test1')).to.be.true;
+    shouldRemoveIndicatorStub.returns(true);
+
+    mockRealElement.dispatchEvent(createBubbledEvent('dragleave', {}));
+    expect(mockRealElement.classList.contains('test1')).to.be.false;
   });
 
   it('should remove indicatorClass drop happened', () => {
@@ -81,7 +86,7 @@ describe('Droppable Tests', () => {
     });
     drp.addIndicator();
     mockRealElement.dispatchEvent(createBubbledEvent('drop', {}));
-    expect(mockRealElement.className).to.eq(DND_DROP_CLASS);
+    expect(mockRealElement.classList.contains(DND_DROP_CLASS)).to.be.true;
   });
 
   it('should call onDrop when drop event happened', () => {
@@ -127,5 +132,87 @@ describe('Droppable Tests', () => {
     DragContext.type = 'allowing';
     drp.allowListener(mockEvent);
     expect(defaultPrevented).to.be.true;
+  });
+
+  it('should call onAllow callback if given and not prevent default if not allowed', () => {
+    const onAllow = sinon.stub().returns(false);
+    let defaultPrevented = false;
+    const mockEvent = {
+      preventDefault() {
+        defaultPrevented = true;
+      },
+    };
+
+    const drp = new Droppable(mockRealElement, {
+      onAllow,
+      allow: ['allowing'],
+    });
+
+    DragContext.type = 'allowing';
+    drp.allowListener(mockEvent);
+    expect(defaultPrevented).to.be.false;
+    expect(onAllow.called).to.be.true;
+  });
+
+  it(`dragDrop container should have ${DND_DROP_CLASS} class`, () => {
+    const mockElement = document.createElement('div');
+
+    const drp = new Droppable(mockRealElement, {});
+
+    let isDragDropContainer = drp.isDropContainer(mockElement);
+
+    expect(isDragDropContainer).to.be.false;
+    mockElement.classList.add(DND_DROP_CLASS);
+    isDragDropContainer = drp.isDropContainer(mockElement);
+    expect(isDragDropContainer).to.be.true;
+  });
+
+  it('should return true for descendant element', () => {
+    const mockElement = document.createElement('div');
+    const drp = new Droppable(mockRealElement, {});
+
+    let isDescendant = drp.isDescendantElement(mockElement);
+    expect(isDescendant).to.be.false;
+
+    mockRealElement.appendChild(mockElement);
+
+    isDescendant = drp.isDescendantElement(mockElement);
+    expect(isDescendant).to.be.true;
+  });
+
+  it('isRootDraggable working properly', () => {
+    const mockElement = document.createElement('div');
+    const drp = new Droppable(mockRealElement, {});
+
+    let isRoot = drp.isRootDraggable(mockRealElement);
+    expect(isRoot).to.be.true;
+
+    isRoot = drp.isRootDraggable(mockElement);
+    expect(isRoot).to.be.false;
+  });
+
+  it('remove return indicator cases working correctly', () => {
+    const drp = new Droppable(mockRealElement, {});
+    const descendantStub = sinon.stub(drp, 'isDescendantElement').returns(false);
+    const isRootStub = sinon.stub(drp, 'isRootDraggable').returns(false);
+    const isDropContainerStub = sinon.stub(drp, 'isDropContainer').returns(false);
+
+    let shouldRemoveIndicator = drp.shouldRemoveIndicatorWhenDragLeave({});
+    expect(shouldRemoveIndicator).to.be.true;
+
+    descendantStub.returns(true);
+
+    shouldRemoveIndicator = drp.shouldRemoveIndicatorWhenDragLeave({});
+    expect(shouldRemoveIndicator).to.be.false;
+
+    isDropContainerStub.returns(true);
+
+    shouldRemoveIndicator = drp.shouldRemoveIndicatorWhenDragLeave({});
+    expect(shouldRemoveIndicator).to.be.true;
+
+    descendantStub.returns(false);
+    isRootStub.returns(true);
+    shouldRemoveIndicator = drp.shouldRemoveIndicatorWhenDragLeave({});
+    expect(shouldRemoveIndicator).to.be.false;
   });
 });
