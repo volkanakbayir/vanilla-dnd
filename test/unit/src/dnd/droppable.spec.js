@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import Droppable from './src/helpers/dnd/droppable';
-import DragContext from './src/helpers/dnd/dragContext';
+import { Droppable } from '../../../../index'
+import DragContext from '../../../../src/dnd/dragContext'
 
 describe('Droppable Tests', () => {
   const DND_DROP_CLASS = 'dnd__drop-container';

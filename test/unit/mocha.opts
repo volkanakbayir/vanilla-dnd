@@ -1,0 +1,4 @@
+--require test/unit/init-test.js
+--reporter spec
+--require @babel/register
+--slow 5000

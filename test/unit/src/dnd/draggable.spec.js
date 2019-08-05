@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import Draggable from './src/helpers/dnd/draggable';
-import DragContext from './src/helpers/dnd/dragContext';
+import { Draggable } from '../../../../index'
+import DragContext from '../../../../src/dnd/dragContext'
+
 
 describe('Draggable Tests', () => {
   let mockElement;

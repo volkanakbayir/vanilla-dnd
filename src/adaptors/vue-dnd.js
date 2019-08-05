@@ -1,5 +1,5 @@
-import Draggable from '../helpers/dnd/draggable'
-import Droppable from '../helpers/dnd/droppable'
+import Draggable from '../dnd/draggable'
+import Droppable from '../dnd/droppable'
 
 /**
  * Drag-Drop events DraggableDirective for VueJs.

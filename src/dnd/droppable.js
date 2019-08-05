@@ -65,11 +65,11 @@ export default class Droppable {
   }
 
   shouldRemoveIndicatorWhenDragLeave(event) {
-    const eventTriggeredByDescendants = this.isEventTriggeredByDescendants(event);
-    const eventTriggeredByItself = this.el === event.relatedTarget;
+    const eventTriggeredByDescendants = this.isDescendantElement(event.relatedTarget);
+    const eventTriggeredByItself = this.isRootDraggable(event.relatedTarget);
 
     let removeIndicator = true;
-    if (eventTriggeredByDescendants && !this.isRelatedTargetDropContainer(event)) {
+    if (eventTriggeredByDescendants && !this.isDropContainer(event.relatedTarget)) {
       removeIndicator = false;
     } else if (eventTriggeredByItself) {
       removeIndicator = false;
@@ -78,12 +78,16 @@ export default class Droppable {
     return removeIndicator;
   }
 
-  isRelatedTargetDropContainer(event) {
-    return event.relatedTarget.classList.contains(DND_DROP_CLASS);
+  isRootDraggable (el) {
+    return this.el === el;    
+  }
+  
+  isDropContainer(el) {
+    return el.classList.contains(DND_DROP_CLASS);
   }
 
-  isEventTriggeredByDescendants(event) {
-    return this.el.contains(event.relatedTarget);
+  isDescendantElement(el) {
+    return this.el.contains(el);
   }
 
   bind() {

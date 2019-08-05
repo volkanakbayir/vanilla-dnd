@@ -1,0 +1,41 @@
+{
+  "name": "vanilla-dnd",
+  "version": "1.0.0",
+  "description": "A vanilla html5 dnd provider, which can be adapted with mv* libraries",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --opts test/unit/mocha.opts test/unit/**/*.spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volkanakbayir/vanilla-dnd.git"
+  },
+  "keywords": [
+    "drag-drop",
+    "drag&drop",
+    "vanillia",
+    "drag",
+    "javascript",
+    "drag",
+    "drop"
+  ],
+  "author": "Seçkin Volkan Akbayır",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/volkanakbayir/vanilla-dnd/issues"
+  },
+  "homepage": "https://github.com/volkanakbayir/vanilla-dnd#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "chai": "^4.2.0",
+    "jsdom": "^15.1.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^6.2.0",
+    "nodemon": "^1.19.1",
+    "sinon": "^7.3.2"
+  }
+}
