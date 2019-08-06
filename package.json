@@ -1,10 +1,11 @@
 {
   "name": "vanilla-dnd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A vanilla html5 dnd provider, which can be adapted with mv* libraries",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --opts test/unit/mocha.opts test/unit/**/*.spec.js"
+    "test": "mocha --opts test/unit/mocha.opts test/unit/**/*.spec.js",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,8 @@
     "jsdom-global": "^3.0.2",
     "mocha": "^6.2.0",
     "nodemon": "^1.19.1",
-    "sinon": "^7.3.2"
+    "sinon": "^7.3.2",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6"
   }
 }
